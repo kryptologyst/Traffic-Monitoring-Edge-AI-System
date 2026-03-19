@@ -1,0 +1,105 @@
+# Device-specific deployment configuration
+devices:
+  raspberry_pi:
+    device_type: "arm64"
+    cpu_cores: 4
+    memory_mb: 4096
+    storage_mb: 32000
+    recommended_formats: ["tflite", "onnx"]
+    optimization_flags:
+      - "optimize_for_latency"
+      - "reduce_memory_usage"
+    
+  jetson_nano:
+    device_type: "arm64"
+    cpu_cores: 4
+    memory_mb: 4096
+    gpu_memory_mb: 128
+    storage_mb: 16000
+    recommended_formats: ["tflite", "onnx", "tensorrt"]
+    optimization_flags:
+      - "optimize_for_latency"
+      - "gpu_acceleration"
+    
+  jetson_orin:
+    device_type: "arm64"
+    cpu_cores: 12
+    memory_mb: 32768
+    gpu_memory_mb: 8192
+    storage_mb: 64000
+    recommended_formats: ["tflite", "onnx", "tensorrt", "openvino"]
+    optimization_flags:
+      - "optimize_for_throughput"
+      - "gpu_acceleration"
+      - "multi_core_processing"
+    
+  android:
+    device_type: "arm64"
+    cpu_cores: 8
+    memory_mb: 8192
+    storage_mb: 128000
+    recommended_formats: ["tflite", "onnx"]
+    optimization_flags:
+      - "optimize_for_battery"
+      - "reduce_memory_usage"
+    
+  ios:
+    device_type: "arm64"
+    cpu_cores: 6
+    memory_mb: 6144
+    storage_mb: 128000
+    recommended_formats: ["coreml", "onnx"]
+    optimization_flags:
+      - "optimize_for_battery"
+      - "neural_engine_acceleration"
+    
+  intel_nuc:
+    device_type: "x86_64"
+    cpu_cores: 8
+    memory_mb: 16384
+    storage_mb: 256000
+    recommended_formats: ["onnx", "openvino", "tensorrt"]
+    optimization_flags:
+      - "optimize_for_throughput"
+      - "cpu_optimization"
+      - "avx2_acceleration"
+
+deployment:
+  default_device: "raspberry_pi"
+  fallback_device: "cpu"
+  timeout_seconds: 30
+  retry_attempts: 3
+  
+  model_serving:
+    batch_size: 1
+    max_queue_size: 100
+    worker_threads: 2
+    
+  monitoring:
+    enable_metrics: true
+    metrics_interval: 60
+    log_level: "INFO"
+    
+  security:
+    enable_tls: false
+    require_authentication: false
+    api_key_required: false
+
+performance_targets:
+  latency_ms:
+    p50: 10.0
+    p95: 50.0
+    p99: 100.0
+  
+  throughput_fps:
+    minimum: 10.0
+    target: 30.0
+    maximum: 100.0
+  
+  memory_mb:
+    maximum: 512.0
+    target: 256.0
+  
+  model_size_mb:
+    maximum: 10.0
+    target: 5.0

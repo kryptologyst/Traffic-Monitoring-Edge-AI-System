@@ -1,0 +1,43 @@
+# Edge-optimized model configuration
+model:
+  input_dim: 4
+  hidden_dims: [16, 8]  # Smaller network for edge deployment
+  dropout_rate: 0.1
+  activation: "relu"
+
+compression:
+  prune: true
+  prune_amount: 0.3
+  prune_method: "magnitude"
+  structured_pruning: false
+  quantize: true
+  quant_method: "dynamic"
+  quant_backend: "qnnpack"
+
+training:
+  num_epochs: 30
+  learning_rate: 0.001
+  batch_size: 16
+  test_size: 0.2
+  random_state: 42
+
+data:
+  n_samples: 2000
+  seed: 42
+  vehicle_count_range: [10, 150]
+  speed_mean: 50.0
+  speed_std: 10.0
+  rain_probability: 0.3
+
+device:
+  device: "cpu"
+  num_workers: 2
+
+edge_deployment:
+  target_formats: ["tflite", "onnx", "openvino"]
+  optimize_for_latency: true
+  optimize_for_size: true
+
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"

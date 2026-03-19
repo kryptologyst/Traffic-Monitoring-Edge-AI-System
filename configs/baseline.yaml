@@ -1,0 +1,29 @@
+# Baseline model configuration
+model:
+  input_dim: 4
+  hidden_dims: [32, 16]
+  dropout_rate: 0.2
+  activation: "relu"
+
+training:
+  num_epochs: 50
+  learning_rate: 0.001
+  batch_size: 32
+  test_size: 0.2
+  random_state: 42
+
+data:
+  n_samples: 1000
+  seed: 42
+  vehicle_count_range: [10, 150]
+  speed_mean: 50.0
+  speed_std: 10.0
+  rain_probability: 0.3
+
+device:
+  device: "cpu"
+  num_workers: 4
+
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"

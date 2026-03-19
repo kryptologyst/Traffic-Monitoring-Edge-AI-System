@@ -1,0 +1,116 @@
+# IoT communication configuration
+mqtt:
+  broker_host: "localhost"
+  broker_port: 1883
+  client_id_prefix: "traffic_monitor"
+  username: null
+  password: null
+  keepalive: 60
+  qos_level: 1
+  
+  topics:
+    sensors:
+      vehicle_count: "traffic/sensors/vehicle_count"
+      speed: "traffic/sensors/speed"
+      weather: "traffic/sensors/weather"
+      hour: "traffic/sensors/hour"
+      combined: "traffic/sensors/combined"
+    
+    predictions:
+      congestion: "traffic/predictions/congestion"
+      confidence: "traffic/predictions/confidence"
+    
+    alerts:
+      system: "traffic/alerts"
+      congestion: "traffic/alerts/congestion"
+      system_error: "traffic/alerts/system_error"
+    
+    control:
+      start: "traffic/control/start"
+      stop: "traffic/control/stop"
+      config: "traffic/control/config"
+
+websocket:
+  host: "localhost"
+  port: 8765
+  path: "/traffic"
+  max_connections: 100
+  ping_interval: 30
+  ping_timeout: 10
+  
+  message_types:
+    sensor_data: "sensor_data"
+    prediction: "prediction"
+    alert: "alert"
+    status: "status"
+    config: "config"
+
+kafka:
+  enabled: false
+  bootstrap_servers: ["localhost:9092"]
+  client_id: "traffic_monitor"
+  security_protocol: "PLAINTEXT"
+  
+  topics:
+    sensor_data: "traffic-sensor-data"
+    predictions: "traffic-predictions"
+    alerts: "traffic-alerts"
+  
+  producer:
+    acks: "all"
+    retries: 3
+    batch_size: 16384
+    linger_ms: 10
+  
+  consumer:
+    group_id: "traffic_monitor_group"
+    auto_offset_reset: "latest"
+    enable_auto_commit: true
+
+opcua:
+  enabled: false
+  endpoint_url: "opc.tcp://localhost:4840"
+  security_policy: "None"
+  security_mode: "None"
+  
+  nodes:
+    vehicle_count: "ns=2;i=1"
+    avg_speed: "ns=2;i=2"
+    weather: "ns=2;i=3"
+    hour: "ns=2;i=4"
+    congestion: "ns=2;i=5"
+
+communication:
+  default_protocol: "mqtt"
+  fallback_protocol: "websocket"
+  
+  retry_config:
+    max_retries: 3
+    retry_delay: 1.0
+    backoff_factor: 2.0
+  
+  timeout_config:
+    connection_timeout: 10.0
+    message_timeout: 5.0
+    ping_timeout: 3.0
+  
+  buffer_config:
+    max_buffer_size: 1000
+    flush_interval: 1.0
+    batch_size: 10
+
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  
+  mqtt_logging:
+    enabled: true
+    level: "WARNING"
+  
+  websocket_logging:
+    enabled: true
+    level: "INFO"
+  
+  kafka_logging:
+    enabled: false
+    level: "WARNING"
